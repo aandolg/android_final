@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="prev_bt"><![CDATA[<]]></string>
+    <string name="refresh_bt">Reftesh</string>
+
+    <!--Errors status-->
+    <string name="errors_internet">Error connect internet</string>
+    <string name="title_main_activity">Просмотр каталога</string>
+</resources>
