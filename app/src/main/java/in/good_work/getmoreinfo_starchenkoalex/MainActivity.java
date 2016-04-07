@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +23,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -97,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.next_bt:
 //                new InfoThread().execute();
                 this.page++;
-                Log.d("sss", "dsdsdsds");
                 new InfoThread(catalog_url + "?page=" + this.page).execute();
                 Parcelable state = infoLv.onSaveInstanceState();
 
@@ -145,20 +145,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void init() {
         this.infoLv = (ListView) findViewById(R.id.info_lv);
-//        this.infoLv = (ListView) findViewById(R.id.info_lv);
         this.infoLv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         new InfoThread(catalog_url).execute();
         this.adapter = new ProductAdapter(this);
-
         if (this.refreshBtn != null)
             this.refreshBtn.setVisibility(View.INVISIBLE);
         this.nextBt.setVisibility(View.VISIBLE);
         infoLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Log.d("my_t", products.get((int) id).annotation);
-//                Log.d("my_t","Item selected position = " + position + "  id = "+id);
                 Intent intent = new Intent(view.getContext(), ProductActivity.class);
                 intent.putExtra("product_name", products.get((int) id).text);
                 intent.putExtra("product_price", products.get((int) id).price);
@@ -167,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
             }
         });
+
     }
 
     private static class Product {
@@ -186,9 +183,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public class InfoThread extends AsyncTask<String, Void, String> {
+        ProgressDialog pDialog;
         private String catalog_url;
 
         public InfoThread(String catalog_url) {
+            this.pDialog = new ProgressDialog(MainActivity.this);
+            this.pDialog.setMessage(getString(R.string.laod_image_progres));
+            this.pDialog.show();
             this.catalog_url = catalog_url;
         }
 
@@ -197,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Document html;
             try {
                 html = Jsoup.connect(this.catalog_url).get();
-                Log.e("sss", this.catalog_url);
                 content = html.select(".product");
                 for (Element contents : content) {
 
@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(String s) {
             infoLv.setAdapter(adapter);
+            this.pDialog.hide();
         }
     }
 
@@ -236,8 +237,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .inflate(R.layout.item_info, null);
             }
 
-            // new LoadImage((ImageView) findViewById(R.id.product_img_item_adapter)).execute("http://good-work.in/design/default_1/images/logo.png");
 
+            ImageView img_ad = (ImageView) convertView.findViewById(R.id.product_img_item_adapter);
+
+//            new LoadImage(img_ad).execute(product.src_image);
+            Picasso.with(getContext()).load(product.src_image).into(img_ad);
             ((TextView) convertView.findViewById(R.id.product_name_item_adapter))
                     .setText(product.text);
             ((TextView) convertView.findViewById(R.id.price_name_item_adapter))
@@ -259,9 +263,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                pDialog = new ProgressDialog(MainActivity.this);
+               /* pDialog = new ProgressDialog(MainActivity.this);
                 pDialog.setMessage("Loading Image ....");
-                pDialog.show();
+                pDialog.show();*/
 
             }
 

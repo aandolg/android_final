@@ -6,4 +6,5 @@
     <!--Errors status-->
     <string name="errors_internet">Error connect internet</string>
     <string name="title_main_activity">Просмотр каталога</string>
+    <string name="laod_image_progres">Loading Image ....</string>
 </resources>

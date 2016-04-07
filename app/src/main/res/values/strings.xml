@@ -11,5 +11,6 @@
     <string name="img_produc_adapter">image product</string>
     <string name="title_activity_product">ProductActivity</string>
     <string name="product_detaol_image">product</string>
-    <string name="title_main_activity">Просмотр каталога</string>
+    <string name="title_main_activity">Views Catalog</string>
+    <string name="laod_image_progres">Loading Catalog ....</string>
 </resources>
